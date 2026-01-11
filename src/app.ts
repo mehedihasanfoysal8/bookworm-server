@@ -44,7 +44,12 @@ const corsOptions: cors.CorsOptions = {
   allowedHeaders: ["Content-Type", "Authorization"],
 };
 
-app.use(cors(corsOptions));
+app.use(
+  cors({
+    origin: config.origins,
+    credentials: true,
+  })
+);
 
 /* ---------------------------------------------------
    Routes

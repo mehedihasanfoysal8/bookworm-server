@@ -17,4 +17,6 @@ router.post(
   AuthControllers.loginUser
 );
 
+router.post("/logout", AuthControllers.logoutUser);
+
 export const AuthRoutes = router;
