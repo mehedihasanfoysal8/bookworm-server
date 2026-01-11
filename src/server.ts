@@ -2,6 +2,7 @@ import app from "./app";
 import config from "./app/config";
 import mongoose from "mongoose";
 import { Server } from "http";
+import superAdmin from "./app/DB";
 
 let server: Server;
 
@@ -11,7 +12,7 @@ async function main() {
 
     console.log("DB connection successful");
 
-    //seedSuperAdmin();
+    superAdmin();
 
     server = app.listen(config.port || 5001, () => {
       console.log(

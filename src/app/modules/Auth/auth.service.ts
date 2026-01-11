@@ -36,7 +36,10 @@ const registerUser = async (payload: TUser) => {
 const loginUser = async (payload: TLoginUser) => {
   const { email, password } = payload;
 
+  console.log({ email, password });
+
   const user = await User.findOne({ email });
+  console.log("user", user);
 
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, "This user is not found!");
