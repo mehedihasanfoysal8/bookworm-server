@@ -1,38 +1,35 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import httpStatus from "http-status";
 import AppError from "../errors/appError";
 import config from "../config";
-import { TJWTPayload } from "../modules/Auth/auth.interface";
 
-const auth =
-  (...requiredRoles: ("user" | "admin")[]) =>
-  (req: Request, _res: Response, next: NextFunction) => {
-    const token = req.headers.authorization?.split(" ")[1];
+const auth = (...roles: ("admin" | "user")[]) => {
+  return (req: Request, _res: Response, next: NextFunction) => {
+    const token = req.cookies?.accessToken;
 
     if (!token) {
-      throw new AppError(httpStatus.UNAUTHORIZED, "You are not authorized");
+      throw new AppError(httpStatus.UNAUTHORIZED, "Not authenticated");
     }
 
     try {
-      const decoded = jwt.verify(
-        token,
-        config.jwt_access_token as string
-      ) as TJWTPayload;
+      const decoded = jwt.verify(token, config.jwt_access_token as string) as {
+        userId: string;
+        email: string;
+        role: "admin" | "user";
+      };
 
       req.user = decoded;
 
-      if (requiredRoles.length && !requiredRoles.includes(decoded.role)) {
-        throw new AppError(
-          httpStatus.FORBIDDEN,
-          "You have no permission to access this route"
-        );
+      if (roles.length && !roles.includes(decoded.role)) {
+        throw new AppError(httpStatus.FORBIDDEN, "No permission");
       }
 
       next();
-    } catch (error) {
-      throw new AppError(httpStatus.UNAUTHORIZED, "Invalid or expired token");
+    } catch {
+      throw new AppError(httpStatus.UNAUTHORIZED, "Invalid token");
     }
   };
+};
 
 export default auth;

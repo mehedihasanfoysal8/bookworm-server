@@ -32,6 +32,16 @@ const loginUser = catchAsync(async (req, res) => {
   });
 });
 
+const getMe = catchAsync(async (req, res) => {
+  const user = req.user;
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    message: "User info fetched",
+    data: user,
+  });
+});
+
 const logoutUser = catchAsync(async (_req, res) => {
   res.clearCookie("accessToken", {
     httpOnly: true,
@@ -50,4 +60,5 @@ export const AuthControllers = {
   loginUser,
   registerUser,
   logoutUser,
+  getMe,
 };
