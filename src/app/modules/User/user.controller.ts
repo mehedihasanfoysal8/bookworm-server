@@ -23,7 +23,32 @@ const updateMyProfile = catchAsync(async (req, res) => {
   });
 });
 
+const getAllUsers = catchAsync(async (req, res) => {
+  const result = await UserServices.getAllUsers();
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    message: "Users retrieved successfully",
+    data: result,
+  });
+});
+
+const updateUserRole = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const { role } = req.body;
+
+  const result = await UserServices.updateUserRole(id as string, role);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    message: "User role updated successfully",
+    data: result,
+  });
+});
+
 export const UserControllers = {
   getMyProfile,
   updateMyProfile,
+  getAllUsers,
+  updateUserRole,
 };

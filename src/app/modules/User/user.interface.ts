@@ -1,11 +1,12 @@
 import { Model } from "mongoose";
+export type TUserRole = "admin" | "user";
 
 export type TUser = {
   name: string;
   email: string;
   password: string;
   photo?: string;
-  role?: "user" | "admin";
+  role: TUserRole;
   isDeleted?: boolean;
 };
 

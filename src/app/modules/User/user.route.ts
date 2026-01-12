@@ -6,6 +6,8 @@ import { UserValidation } from "./user.validation";
 
 const router = express.Router();
 
+// User Route only
+
 router.get("/me", auth("admin", "user"), UserControllers.getMyProfile);
 
 router.patch(
@@ -13,6 +15,16 @@ router.patch(
   auth("admin", "user"),
   validateRequest(UserValidation.updateProfileValidationSchema),
   UserControllers.updateMyProfile
+);
+
+// Admin Route only
+router.get("/", auth("admin"), UserControllers.getAllUsers);
+
+router.patch(
+  "/:id/role",
+  auth("admin"),
+  validateRequest(UserValidation.updateUserRoleValidationSchema),
+  UserControllers.updateUserRole
 );
 
 export const UserRoutes = router;
